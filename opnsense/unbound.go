@@ -1,13 +1,12 @@
-package unbound
+package opnsense
 
 import (
 	opn_unbound "github.com/eugenmayer/opnsense-cli/opnsense/api/unbound"
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"terraform-sysint-os-dns/opnsense"
 )
 
 func CreateOverrideHost(d *schema.ResourceData, meta interface{}) (err error) {
-	client := meta.(opnsense.ProviderClient)
+	client := meta.(ProviderClient)
 	api := opn_unbound.UnboundApi{client.Conn}
 	host := unmarshalHost(d)
 	uuid, err := api.HostOverrideCreate(host)
@@ -19,7 +18,7 @@ func CreateOverrideHost(d *schema.ResourceData, meta interface{}) (err error) {
 }
 
 func ReadOverrideHost(d *schema.ResourceData, meta interface{}) (err error) {
-	client := meta.(opnsense.ProviderClient)
+	client := meta.(ProviderClient)
 	api := opn_unbound.UnboundApi{client.Conn}
 	host, err := api.HostEntryGetByFQDN(d.Get("host").(string), d.Get("domain").(string))
 	if err == nil {
@@ -57,14 +56,14 @@ func unmarshalHost(d *schema.ResourceData) opn_unbound.HostOverride {
 }
 
 func DeleteOverrideHost(d *schema.ResourceData, meta interface{}) (err error) {
-	client := meta.(opnsense.ProviderClient)
+	client := meta.(ProviderClient)
 	api := opn_unbound.UnboundApi{client.Conn}
 	err = api.HostEntryRemove(d.Get("uuid").(string))
 	return err
 }
 
 func UpdateOverrideHost(d *schema.ResourceData, meta interface{}) (err error) {
-	client := meta.(opnsense.ProviderClient)
+	client := meta.(ProviderClient)
 	api := opn_unbound.UnboundApi{client.Conn}
 	host := unmarshalHost(d)
 	uuid, err := api.HostOverrideUpdate(host)
@@ -74,7 +73,7 @@ func UpdateOverrideHost(d *schema.ResourceData, meta interface{}) (err error) {
 }
 
 func ExistsOverrideHost(d *schema.ResourceData, meta interface{}) (bool, error) {
-	client := meta.(opnsense.ProviderClient)
+	client := meta.(ProviderClient)
 	api := opn_unbound.UnboundApi{client.Conn}
 	host, err := api.HostEntryGetByFQDN(d.Get("host").(string), d.Get("domain").(string))
 	if err != nil {

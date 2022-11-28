@@ -3,7 +3,6 @@ package opnsense
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
 	"github.com/hashicorp/terraform-plugin-sdk/terraform"
-	"terraform-sysint-os-dns/opnsense/unbound"
 )
 
 const OPN_URL = "opn_url"
@@ -50,11 +49,11 @@ func Provider() terraform.ResourceProvider {
 
 func initHostOverride() *schema.Resource {
 	return &schema.Resource{
-		Create: unbound.CreateOverrideHost,
-		Read:   unbound.ReadOverrideHost,
-		Update: unbound.UpdateOverrideHost,
-		Delete: unbound.DeleteOverrideHost,
-		Exists: unbound.ExistsOverrideHost,
+		Create: CreateOverrideHost,
+		Read:   ReadOverrideHost,
+		Update: UpdateOverrideHost,
+		Delete: DeleteOverrideHost,
+		Exists: ExistsOverrideHost,
 		Schema: map[string]*schema.Schema{
 			"enabled": {
 				Type:     schema.TypeBool,
