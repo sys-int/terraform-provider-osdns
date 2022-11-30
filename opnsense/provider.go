@@ -1,8 +1,7 @@
 package opnsense
 
 import (
-	"github.com/hashicorp/terraform-plugin-sdk/helper/schema"
-	"github.com/hashicorp/terraform-plugin-sdk/terraform"
+	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
 const OPN_URL = "opn_url"
@@ -10,9 +9,9 @@ const OPN_NOSSLVERIFY = "opn_nosslverify"
 const OPN_APIKEY = "opn_apikey"
 const OPN_APISECRET = "opn_apisecret"
 
-func Provider() terraform.ResourceProvider {
+func Provider() *schema.Provider {
 	return &schema.Provider{
-		ConfigureFunc: providerConfigure,
+		ConfigureContextFunc: providerConfigure,
 
 		Schema: map[string]*schema.Schema{
 			OPN_URL: {
@@ -32,71 +31,72 @@ func Provider() terraform.ResourceProvider {
 
 			OPN_NOSSLVERIFY: {
 				Type:     schema.TypeBool,
-				Required: false,
+				Optional: true,
 				Default:  false,
 			},
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"dns_override": initHostOverride(),
+			"osdns_override": readHostOverride(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"dns_override": initHostOverride(),
+			"osdns_override": hostOverride(),
 		},
 	}
 }
 
-func initHostOverride() *schema.Resource {
+func hostOverride() *schema.Resource {
 	return &schema.Resource{
-		Create: CreateOverrideHost,
-		Read:   ReadOverrideHost,
-		Update: UpdateOverrideHost,
-		Delete: DeleteOverrideHost,
-		Exists: ExistsOverrideHost,
-		Schema: map[string]*schema.Schema{
-			"enabled": {
-				Type:     schema.TypeBool,
-				Computed: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeBool,
-				},
-			},
-			"host": {
-				Type:     schema.TypeString,
-				Computed: true,
-				Elem: &schema.Schema{
-					Type: schema.TypeString,
-				},
-			},
-			"domain": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"ip": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"rr": {
-				Type:     schema.TypeString,
-				Required: true,
-			},
-			"mx": {
-				Type:     schema.TypeString,
-				Required: false,
-			},
-			"mxprio": {
-				Type:     schema.TypeString,
-				Required: false,
-			},
-			"description": {
-				Type:     schema.TypeString,
-				Required: false,
-			},
-			"uuid": {
-				Type:     schema.TypeString,
-				Required: false,
-			},
+		CreateContext: resourceHostOverrideCreate,
+		ReadContext:   resourceHostOverrideRead,
+		UpdateContext: resourceHostOverrideUpdate,
+		DeleteContext: resourceHostOverrideDelete,
+		Schema:        hostOverrideSchema(),
+	}
+}
+
+func readHostOverride() *schema.Resource {
+	return &schema.Resource{
+		ReadContext: resourceHostOverrideRead,
+		Schema:      hostOverrideSchema(),
+	}
+}
+
+func hostOverrideSchema() map[string]*schema.Schema {
+	return map[string]*schema.Schema{
+		"enabled": {
+			Type:     schema.TypeBool,
+			Optional: true,
+			Default:  true,
+		},
+		"host": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"domain": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"ip": {
+			Type:     schema.TypeString,
+			Required: true,
+		},
+		"rr": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"mx": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"mxprio": {
+			Type:     schema.TypeString,
+			Optional: true,
+		},
+		"description": {
+			Type:     schema.TypeString,
+			Optional: true,
 		},
 	}
 }
