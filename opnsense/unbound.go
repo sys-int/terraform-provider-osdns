@@ -17,16 +17,6 @@ func resourceHostOverrideCreate(ctx context.Context, d *schema.ResourceData, met
 	api := opn_unbound.UnboundApi{client.Conn}
 
 	host := unmarshalHost(ctx, d, &opn_unbound.HostOverride{})
-	tflog.Debug(ctx, "pre-create", map[string]interface{}{
-		"enabled":     host.Enabled,
-		"uuid":        host.Uuid,
-		"host":        host.Host,
-		"domain":      host.Domain,
-		"ip":          host.Ip,
-		"mx":          host.Mx,
-		"mxprio":      host.Mxprio,
-		"description": host.Description,
-	})
 	tflog.Debug(ctx, "now calling host to create override host")
 	uuid, err := api.HostOverrideCreate(*host)
 	tflog.Debug(ctx, "processed uuid="+uuid)
@@ -48,16 +38,6 @@ func resourceHostOverrideRead(ctx context.Context, d *schema.ResourceData, meta 
 	api := opn_unbound.UnboundApi{client.Conn}
 	host, err := api.HostEntryGetByUuid(d.Id())
 	host.Uuid = d.Id()
-	tflog.Debug(ctx, "read host", map[string]interface{}{
-		"enabled":     host.Enabled,
-		"uuid":        host.Uuid,
-		"host":        host.Host,
-		"domain":      host.Domain,
-		"ip":          host.Ip,
-		"mx":          host.Mx,
-		"mxprio":      host.Mxprio,
-		"description": host.Description,
-	})
 	if err != nil {
 		return diag.FromErr(err)
 	}
@@ -91,22 +71,3 @@ func resourceHostOverrideUpdate(ctx context.Context, d *schema.ResourceData, met
 	}
 	return diags
 }
-
-//
-//func ExistsOverrideHost(ctx context.Context, d *schema.ResourceData, meta interface{}) (bool, diag.Diagnostics) {
-//
-//	var diags diag.Diagnostics
-//	client := meta.(ProviderClient)
-//	api := opn_unbound.UnboundApi{client.Conn}
-//	host, err := api.HostEntryGetByFQDN(d.Get("host").(string), d.Get("domain").(string))
-//	if err != nil {
-//		return true, diag.FromErr(err)
-//	}
-//	if err != nil {
-//		return false, nil
-//	}
-//	if &host != nil {
-//		return true, nil
-//	}
-//	return false, diags
-//}

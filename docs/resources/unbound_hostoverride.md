@@ -27,7 +27,6 @@ description: |-
 - `enabled` (Boolean)
 - `mx` (String)
 - `mxprio` (String)
-- `rr` (String)
 
 ### Read-Only
 

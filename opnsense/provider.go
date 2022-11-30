@@ -82,10 +82,6 @@ func hostOverrideSchema() map[string]*schema.Schema {
 			Type:     schema.TypeString,
 			Required: true,
 		},
-		"rr": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
 		"mx": {
 			Type:     schema.TypeString,
 			Optional: true,
