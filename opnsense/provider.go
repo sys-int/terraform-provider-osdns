@@ -4,10 +4,10 @@ import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
 )
 
-const OPN_URL = "opn_url"
-const OPN_NOSSLVERIFY = "opn_nosslverify"
-const OPN_APIKEY = "opn_apikey"
-const OPN_APISECRET = "opn_apisecret"
+const OPN_URL = "opnsense_url"
+const OPN_NOSSLVERIFY = "opnsense_nosslverify"
+const OPN_APIKEY = "opnsense_apikey"
+const OPN_APISECRET = "opnsense_apisecret"
 
 func Provider() *schema.Provider {
 	return &schema.Provider{
@@ -37,11 +37,11 @@ func Provider() *schema.Provider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"osdns_override": readHostOverride(),
+			"opnsense_unbound_hostoverride": readHostOverride(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"osdns_override": hostOverride(),
+			"opnsense_unbound_hostoverride": hostOverride(),
 		},
 	}
 }
