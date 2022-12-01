@@ -2,6 +2,7 @@ package opnsense
 
 import (
 	"github.com/hashicorp/terraform-plugin-sdk/v2/helper/schema"
+	"terraform-sysint-os-dns/opnsense/unbound"
 )
 
 const OPN_URL = "opnsense_url"
@@ -37,62 +38,11 @@ func Provider() *schema.Provider {
 		},
 
 		DataSourcesMap: map[string]*schema.Resource{
-			"opnsense_unbound_hostoverride": readHostOverride(),
+			"opnsense_unbound_hostoverride": unbound.ReadHostOverride(),
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"opnsense_unbound_hostoverride": hostOverride(),
-		},
-	}
-}
-
-func hostOverride() *schema.Resource {
-	return &schema.Resource{
-		CreateContext: resourceHostOverrideCreate,
-		ReadContext:   resourceHostOverrideRead,
-		UpdateContext: resourceHostOverrideUpdate,
-		DeleteContext: resourceHostOverrideDelete,
-		Schema:        hostOverrideSchema(),
-	}
-}
-
-func readHostOverride() *schema.Resource {
-	return &schema.Resource{
-		ReadContext: resourceHostOverrideRead,
-		Schema:      hostOverrideSchema(),
-	}
-}
-
-func hostOverrideSchema() map[string]*schema.Schema {
-	return map[string]*schema.Schema{
-		"enabled": {
-			Type:     schema.TypeBool,
-			Optional: true,
-			Default:  true,
-		},
-		"host": {
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"domain": {
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"ip": {
-			Type:     schema.TypeString,
-			Required: true,
-		},
-		"mx": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"mxprio": {
-			Type:     schema.TypeString,
-			Optional: true,
-		},
-		"description": {
-			Type:     schema.TypeString,
-			Optional: true,
+			"opnsense_unbound_hostoverride": unbound.HostOverride(),
 		},
 	}
 }

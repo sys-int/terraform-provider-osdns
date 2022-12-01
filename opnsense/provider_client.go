@@ -17,6 +17,10 @@ type ProviderClient struct {
 	Conn        *opn_api.OPNsense
 }
 
+func (c ProviderClient) GetConn() *opn_api.OPNsense {
+	return c.Conn
+}
+
 // providerConfigure parses the config into the Terraform provider meta object
 func providerConfigure(ctx context.Context, d *schema.ResourceData) (interface{}, diag.Diagnostics) {
 	var diags diag.Diagnostics

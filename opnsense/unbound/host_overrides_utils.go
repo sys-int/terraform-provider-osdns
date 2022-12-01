@@ -1,4 +1,4 @@
-package opnsense
+package unbound
 
 import (
 	"context"
