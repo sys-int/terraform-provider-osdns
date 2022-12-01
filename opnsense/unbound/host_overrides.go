@@ -25,6 +25,7 @@ func resourceHostOverrideCreate(ctx context.Context, d *schema.ResourceData, met
 	mtx.Lock()
 	host := unmarshalHost(ctx, d, &opn_unbound.HostOverride{})
 	uuid, err := api.HostOverrideCreate(*host)
+	api.ServiceRestart()
 	mtx.Unlock()
 	if err != nil {
 		tflog.Error(ctx, "error creating override host "+err.Error())
@@ -66,6 +67,7 @@ func resourceHostOverrideDelete(ctx context.Context, d *schema.ResourceData, met
 	api := opn_unbound.UnboundApi{client.GetConn()}
 	mtx.Lock()
 	err := api.HostEntryRemove(d.Id())
+	api.ServiceRestart()
 	mtx.Unlock()
 	if err != nil {
 		return diag.FromErr(err)
@@ -81,6 +83,7 @@ func resourceHostOverrideUpdate(ctx context.Context, d *schema.ResourceData, met
 	host := unmarshalHost(ctx, d, &opn_unbound.HostOverride{})
 	mtx.Lock()
 	uuid, err := api.HostOverrideUpdate(*host)
+	api.ServiceRestart()
 	mtx.Unlock()
 	host.Uuid = uuid
 	marshalHost(ctx, d, *host)
